@@ -7,13 +7,13 @@ import numpy as np
 from PIL import Image
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-host_ip = 'server_ip'  # 서버의 IP 주소를 입력하세요
-port = 9999
+host_ip = ''  # your server ip
+port = 9999  # your socket communication port
 client_socket.connect((host_ip, port))
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(cv2.CAP_DSHOW + 0)
 
-# 웹캠의 해상도를 512x512로 설정
+# set webcam resolution as 512x512
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 512)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 512)
 data = b""
@@ -36,25 +36,26 @@ while cap.isOpened():
         print(f"Current FPS: {fps}")
 
         while len(data) < payload_size:
-            packet = client_socket.recv(4 * 1024)  # 버퍼 사이즈 4K
+            packet = client_socket.recv(4 * 1024)  # buffer size 4K
             if not packet: break
             data += packet
         packed_msg_size = data[:payload_size]
         data = data[payload_size:]
         msg_size = struct.unpack("Q", packed_msg_size)[0]
 
-        # 프레임 데이터를 받는 부분
+        # get data frame
         while len(data) < msg_size:
             data += client_socket.recv(4 * 1024)
         frame_data = data[:msg_size]
         data = data[msg_size:]
 
-        # 변환된 이미지 프레임을 로드
+        # get transformed image
         frame = pickle.loads(frame_data)
         frame = cv2.cvtColor(np.array(frame), cv2.COLOR_RGB2BGR)
         cv2.imshow('Received Transformed Video', frame)
     else:
         break
 
+client_socket.close()
 cap.release()
 cv2.destroyAllWindows()
