@@ -29,6 +29,6 @@ Tested on NVIDIA L40 GPU for server
 - random seed server(about 30fps)
 
 ![random_demo.gif](readme_src/random_demo.gif)
-- fixed seed server
+- fixed seed server(about 15fps)
 
 ![fixed_demo.gif](readme_src%2Ffixed_demo.gif)
