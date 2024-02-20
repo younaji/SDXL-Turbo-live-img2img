@@ -22,6 +22,7 @@ def img2img(img):
     # set your prompt for generation
     prompt = "cat wizard, gandalf, lord of the rings, detailed, fantasy, cute, adorable, Pixar, Disney, 8k"
     # customize your generation option before execute this server file
+    g.manual_seed(42) # you can change your desire seed
     image = pipe(prompt, image=img, num_inference_steps=2,  generator=g, strength=0.5, guidance_scale=0.0).images[0]
     return image
 
